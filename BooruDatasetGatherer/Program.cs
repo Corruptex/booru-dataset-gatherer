@@ -71,7 +71,7 @@ namespace BooruDatasetGatherer
             string fileLocation = Path.Join(profile.SaveLocation, $"results-{profile.Source}-{DateTime.Now.ToShortDateString()}.csv");
             using (StreamWriter stream = new(File.Create(fileLocation)))
             {
-                await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5");
+                await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION");
 
                 for (int i = 0; i < threads.Length; i++)
                     threads[i] = GetPostsAsync(factory.GetBooru(profile.Source)!, profile, stream, perThread, profile.BatchSize);
@@ -98,26 +98,31 @@ namespace BooruDatasetGatherer
                 for (int i = 0; i < results.Length; i++)
                 {
                     SearchResult result = results[i];
-                    string extension = Path.GetExtension(result.FileUrl.GetLeftPart(UriPartial.Path));
-
-                    if (profile.FileFilters.Contains(extension.ToLower()))
+                    if (!profile.MatureContentAllowed && (int)result.Rating > 1)
+                        processed--;
+                    else
                     {
-                        string line = $"\"{result.FileUrl}\", \"{result.PreviewUrl}\", \"{result.PostUrl}\", \"{result.SampleUri}\", \"{result.Rating}\", " +
-                                    $"\"{string.Join(',', result.Tags)}\", \"{result.ID}\", \"{result.Height}\", \"{result.Width}\", \"{result.PreviewHeight}\", \"{result.PreviewWidth}\", " +
-                                    $"\"{result.Creation}\", \"{result.Source}\", \"{result.Score}\", \"{result.MD5}\"";
-                        lock (stream)
+                        string extension = Path.GetExtension(result.FileUrl.GetLeftPart(UriPartial.Path));
+
+                        if (profile.FileFilters.Contains(extension.ToLower()))
                         {
-                            stream.WriteLine(line);
-                        }
+                            string line = $"\"{result.FileUrl}\", \"{result.PreviewUrl}\", \"{result.PostUrl}\", \"{result.SampleUri}\", \"{result.Rating}\", " +
+                                        $"\"{string.Join(',', result.Tags)}\", \"{result.ID}\", \"{result.Height}\", \"{result.Width}\", \"{result.PreviewHeight}\", \"{result.PreviewWidth}\", " +
+                                        $"\"{result.Creation}\", \"{result.Source}\", \"{result.Score}\", \"{result.MD5}\", \"{Path.Join(profile.SaveLocation, $"{result.ID}{extension}")}\"";
+                            lock (stream)
+                            {
+                                stream.WriteLine(line);
+                            }
 
-                        if (profile.DownloadImages)
-                        {
-                            using HttpClient httpClient = new();
+                            if (profile.DownloadImages)
+                            {
+                                using HttpClient httpClient = new();
 
-                            string path = Path.Combine(profile.SaveLocation, $"{result.ID}{extension}");
-                            byte[] image = await httpClient.GetByteArrayAsync(result.FileUrl);
+                                string path = Path.Combine(profile.SaveLocation, $"{result.ID}{extension}");
+                                byte[] image = await httpClient.GetByteArrayAsync(result.FileUrl);
 
-                            await File.WriteAllBytesAsync(path, image);
+                                await File.WriteAllBytesAsync(path, image);
+                            }
                         }
                     }
                 }
