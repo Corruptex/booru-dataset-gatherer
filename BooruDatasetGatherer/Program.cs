@@ -23,20 +23,18 @@ namespace BooruDatasetGatherer
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i][0] == '-' && args[i][1] == '-')
-                    argMap.Add(args[i].Substring(2, args[i].Length - 2), args[i + 1]);
+                    argMap.Add(args[i][2..], args[i + 1]);
             }
 
-            BooruProfile profile = new BooruProfile();
+            BooruProfile profile = new();
 
             if (argMap.ContainsKey("profile") && File.Exists(argMap["profile"]))
             {
-                using (FileStream stream = File.OpenRead(argMap["profile"]))
-                {
-                    BooruProfile? booruProfile = await JsonSerializer.DeserializeAsync<BooruProfile>(stream);
+                using FileStream stream = File.OpenRead(argMap["profile"]);
+                BooruProfile? booruProfile = await JsonSerializer.DeserializeAsync<BooruProfile>(stream);
 
-                    if (booruProfile != null)
-                        profile = booruProfile;
-                }
+                if (booruProfile != null)
+                    profile = booruProfile;
             }
 
             profile.ParseSettings(argMap);
@@ -68,7 +66,7 @@ namespace BooruDatasetGatherer
             Console.WriteLine($"Each thread will handle {perThread} posts, divided under (circa) {perThread / profile.BatchSize} cycles.\n");
 
             string fileLocation = Path.Join(profile.SaveLocation, $"results-{profile.Source}-{DateTime.Now.ToShortDateString()}.csv");
-            using (StreamWriter stream = new StreamWriter(File.Create(fileLocation)))
+            using (StreamWriter stream = new(File.Create(fileLocation)))
             {
                 await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5");
 
@@ -84,11 +82,10 @@ namespace BooruDatasetGatherer
         private static async Task GetPostsAsync(ABooru booruInstance, BooruProfile profile, StreamWriter stream, int total, int batch)
         {
             int processed = 0;
-            HttpClient client = new HttpClient();
 
             while (processed < total)
             {
-                SearchResult[] results = { };
+                SearchResult[] results;
 
                 if (total - processed < batch)
                     results = await booruInstance.GetRandomPostsAsync(total - processed, profile.Filter);
@@ -112,7 +109,7 @@ namespace BooruDatasetGatherer
 
                         if (profile.DownloadImages)
                         {
-                            using HttpClient httpClient = new HttpClient();
+                            using HttpClient httpClient = new();
 
                             string path = Path.Combine(profile.SaveLocation, $"{result.ID}{extension}");
                             byte[] image = await httpClient.GetByteArrayAsync(result.FileUrl);
