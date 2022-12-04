@@ -28,6 +28,9 @@ namespace BooruDatasetGatherer
 
             BooruProfile profile = new();
 
+            if (!File.Exists(argMap["profile"]) || File.Exists(Path.Join(AppDomain.CurrentDomain.BaseDirectory, $"{argMap["profile"]}.json")))
+                argMap["profile"] = Path.Join(AppDomain.CurrentDomain.BaseDirectory, $"{argMap["profile"]}.json");
+
             if (argMap.ContainsKey("profile") && File.Exists(argMap["profile"]))
             {
                 using FileStream stream = File.OpenRead(argMap["profile"]);
