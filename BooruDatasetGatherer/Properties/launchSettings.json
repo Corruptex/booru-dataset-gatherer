@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "BooruDatasetGatherer": {
+      "commandName": "Project",
+      "commandLineArgs": "--profile \"C:\\Users\\dvddv\\OneDrive\\Desktop\\TestProfile.json\""
+    }
+  }
+}
