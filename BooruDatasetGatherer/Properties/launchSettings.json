@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "BooruDatasetGatherer": {
-      "commandName": "Project",
-      "commandLineArgs": "--profile TestProfile"
-    }
-  }
-}

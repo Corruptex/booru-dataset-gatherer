@@ -2,8 +2,14 @@
 using BooruDatasetGatherer.Factories;
 using BooruSharp.Booru;
 using BooruSharp.Search.Post;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace BooruDatasetGatherer
 {
@@ -28,7 +34,7 @@ namespace BooruDatasetGatherer
             if (args == null || args.Length == 0)
                 return;
 
-            Dictionary<string, string> argMap = new();
+            Dictionary<string, string> argMap = new Dictionary<string, string>();
 
             for (int i = 0; i < args.Length; i++)
             {
@@ -36,7 +42,7 @@ namespace BooruDatasetGatherer
                     argMap.Add(args[i][2..], args[i + 1]);
             }
 
-            BooruProfile profile = new();
+            BooruProfile profile = new BooruProfile();
 
             if (argMap.ContainsKey("profile"))
             {
@@ -58,7 +64,7 @@ namespace BooruDatasetGatherer
             if (string.IsNullOrEmpty(profile.Source))
                 return;
 
-            BooruFactory factory = new();
+            BooruFactory factory = new BooruFactory();
             if (!factory.Contains(profile.Source))
                 return;
 
@@ -84,7 +90,7 @@ namespace BooruDatasetGatherer
             Stopwatch stopWatch = Stopwatch.StartNew();
 
             string fileLocation = Path.Join(profile.SaveLocation, $"results-{profile.Source}-{DateTime.Now.ToShortDateString()}-{DateTime.Now.ToShortTimeString().Replace(":", "-")}.csv");
-            using (StreamWriter stream = new(File.Create(fileLocation)))
+            using (StreamWriter stream = new StreamWriter(File.Create(fileLocation)))
             {
                 await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION");
 
@@ -145,7 +151,7 @@ namespace BooruDatasetGatherer
 
                             if (profile.DownloadImages)
                             {
-                                using HttpClient httpClient = new();
+                                using HttpClient httpClient = new HttpClient();
 
                                 string path = Path.Combine(profile.SaveLocation, $"{result.ID}{extension}");
                                 byte[] image = await httpClient.GetByteArrayAsync(result.FileUrl);

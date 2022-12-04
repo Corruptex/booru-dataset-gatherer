@@ -1,4 +1,7 @@
 ﻿using BooruSharp.Booru;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BooruDatasetGatherer.Factories
 {
@@ -6,7 +9,7 @@ namespace BooruDatasetGatherer.Factories
     {
         public readonly string[] Boorus = new string[0];
 
-        private Dictionary<string, Type> _boorus = new Dictionary<string, Type>();
+        private readonly Dictionary<string, Type> _boorus = new Dictionary<string, Type>();
 
         public BooruFactory()
         {

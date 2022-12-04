@@ -1,8 +1,11 @@
-﻿using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text.Json.Serialization;
 
 namespace BooruDatasetGatherer.Data
 {
-    [JsonSerializable(typeof(BooruProfile))]
     public class BooruProfile
     {
         [JsonPropertyName("source")]
