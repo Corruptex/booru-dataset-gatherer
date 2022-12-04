@@ -1,7 +1,7 @@
 # Booru Dataset Gatherer
 
 <p align="center">
-    A .NET Core 3.1 Console application to gather tags and relevant information from Booru websites for Machine Learning. <br>
+    A .NET Core 3.1 Console application to gather relevant information from Booru websites to create datasets. <br>
     <i>Powered by <a href="https://github.com/Xwilarg/BooruSharp" target="_blank">Boorusharp</a>, with support for Danbooru, E621, E926, Gelbooru and many more.</i>
 </p>
 
