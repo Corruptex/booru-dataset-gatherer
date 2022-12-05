@@ -40,6 +40,15 @@ namespace BooruDatasetGatherer.Data
         [JsonPropertyName("download")]
         public bool DownloadImages { get; set; } = false;
 
+
+        [JsonPropertyName("username")]
+        public string Username { get; set; } = string.Empty;
+
+        [JsonPropertyName("passwordHash")]
+        public string Password { get; set; } = string.Empty;
+
+        public bool HasAuth { get { return !string.IsNullOrEmpty(Username) && !string.IsNullOrEmpty(Password); } }
+
         public BooruProfile() { }
 
         public void ParseSettings(Dictionary<string, string> settings)
