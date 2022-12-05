@@ -74,7 +74,7 @@ namespace BooruDatasetGatherer
             Console.WriteLine("Running with settings: \n");
             Console.WriteLine(JsonSerializer.Serialize(profile, new JsonSerializerOptions { WriteIndented = true }));
 
-            ABooru booru = factory.GetBooru(profile.Source)!;
+            ABooru booru = factory.GetBooru(profile)!;
             if (!booru.HasMultipleRandomAPI)
             {
                 Console.WriteLine("Selected source does not support getting random posts. Exiting.");
@@ -95,7 +95,7 @@ namespace BooruDatasetGatherer
                 await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION");
 
                 for (int i = 0; i < threads.Length; i++)
-                    threads[i] = GetPostsAsync(factory.GetBooru(profile.Source)!, profile, stream, perThread, profile.BatchSize);
+                    threads[i] = GetPostsAsync(factory.GetBooru(profile)!, profile, stream, perThread, profile.BatchSize);
 
                 await Task.WhenAll(threads);
             }
