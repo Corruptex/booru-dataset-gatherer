@@ -95,6 +95,13 @@ namespace BooruDatasetGatherer.Data
                         if (bool.TryParse(settings[key], out bool download))
                             DownloadImages = download;
                         break;
+                    case "username":
+                        Username = settings[key];
+                        break;
+                    case "passwordhash":
+                    case "password":
+                        Password = settings[key];
+                        break;
                 }
             }
         }
