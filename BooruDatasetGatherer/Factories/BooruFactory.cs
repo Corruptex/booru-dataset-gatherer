@@ -1,4 +1,5 @@
-﻿using BooruSharp.Booru;
+﻿using BooruDatasetGatherer.Data;
+using BooruSharp.Booru;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,10 +34,15 @@ namespace BooruDatasetGatherer.Factories
 
         public bool Contains(string name) => Boorus.Contains(name);
 
-        public ABooru? GetBooru(string name)
+        public ABooru? GetBooru(BooruProfile profile)
         {
-            if (_boorus.ContainsKey(name))
-                return (ABooru)Activator.CreateInstance(_boorus[name])!;
+            if (_boorus.ContainsKey(profile.Source))
+            {
+                ABooru booru = (ABooru)Activator.CreateInstance(_boorus[profile.Source])!;
+                if (profile.HasAuth)
+                    booru.Auth = new BooruAuth(profile.Username, profile.Password);
+                return booru;
+            }
             return null;
         }
     }
