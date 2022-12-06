@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 namespace BooruDatasetGatherer.Data
 {
+    [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
     public class BooruProfile
     {
         [JsonPropertyName("source")]
@@ -36,53 +35,5 @@ namespace BooruDatasetGatherer.Data
         public bool DownloadImages { get; set; } = false;
 
         public BooruProfile() { }
-
-        public void ParseSettings(Dictionary<string, string> settings)
-        {
-            foreach (string key in settings.Keys)
-            {
-                switch (key)
-                {
-                    case "source":
-                        Source = settings[key];
-                        break;
-                    case "batch":
-                    case "batchsize":
-                        if (int.TryParse(settings[key], out int batchSize))
-                            BatchSize = batchSize;
-                        break;
-                    case "filter":
-                        Filter = settings[key].Split(",").Select(x => x.Replace(" ", "")).ToArray();
-                        break;
-                    case "files":
-                    case "filefilters":
-                        FileFilters = settings[key].Split(",").Select(x => x.ToLower().Replace(" ", "")).ToArray();
-                        break;
-                    case "location":
-                    case "savelocation":
-                        if (Directory.Exists(settings[key]))
-                            SaveLocation = settings[key];
-                        break;
-                    case "threads":
-                        if (byte.TryParse(settings[key], out byte threads) && threads > 0 && threads < 64)
-                            Threads = threads;
-                        break;
-                    case "nsfw":
-                    case "maturecontent":
-                        if (bool.TryParse(settings[key], out bool nsfw))
-                            MatureContentAllowed = nsfw;
-                        break;
-                    case "size":
-                        if (int.TryParse(settings[key], out int size))
-                            TotalSize = size;
-                        break;
-                    case "download":
-                    case "downloadimages":
-                        if (bool.TryParse(settings[key], out bool download))
-                            DownloadImages = download;
-                        break;
-                }
-            }
-        }
     }
 }
