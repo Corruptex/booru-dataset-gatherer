@@ -41,11 +41,11 @@ Example: `--source safebooru --filter "1girl, confetti" --nsfw false`
 In [Examples](#examples) multiple examples are given for different purposes using the above mentioned arguments.
 
 ### Profiles
-To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument overrules the values inside the profile.
+To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument will be ignored.
 
-If in the `booruProfile` json the `size` argument is set to 20, it'll be overruled by the raw argument that's passed in. In this scenario
+If in the `booruProfile` json the `size` argument is set to 20, it'll overrule the raw argument that's passed in. In this scenario
 `--profile "booruProfile" --size 50`
-the `size` will be 50, even though 20 is defined in the `booruProfile`.
+the `size` will be 20, even though 50 is passed as an argument.
 
 A profile can look like this:
 ```json
