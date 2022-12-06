@@ -12,7 +12,7 @@
 [![Publish](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml/badge.svg)](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml)
 
 ## Summary
-<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
+<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 written Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
 
 ## Quick Start
 Build the application using `dotnet build BooruDatasetGatherer` inside the cloned repository or use Visual Studio (Windows & Mac only) to compile a Debug or Release version.
