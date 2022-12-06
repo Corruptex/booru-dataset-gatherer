@@ -111,6 +111,7 @@ namespace BooruDatasetGatherer
         private static async Task GetPostsAsync(ABooru booruInstance, BooruProfile profile, StreamWriter stream, int total, int batch)
         {
             int processed = 0;
+            int exceptions = 0;
 
             while (processed < total)
             {
@@ -123,9 +124,17 @@ namespace BooruDatasetGatherer
                     else
                         results = await booruInstance.GetRandomPostsAsync(batch, profile.Filter);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Console.WriteLine("Encountered an exception, continuing gathering a new batch.");
+
+                    exceptions++;
+                    if (exceptions > profile.ExceptionLimit)
+                    {
+                        Console.WriteLine($"Passed the exception limit of {profile.ExceptionLimit}, terminating thread.");
+                        break;
+                    }
+
                     processed -= batch;
                 }
                 finally

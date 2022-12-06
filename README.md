@@ -37,6 +37,7 @@ Example: `--source safebooru --filter "1girl, confetti" --nsfw false`
 | `threads` | `byte`    | The amount of threads to split the dataset gathering task with (`4`, `16`) | `4` | :heavy_multiplication_x: |
 | `nsfw`    | `bool`    | If enabled, images that contain Not Safe For Work (NSFW) content will be saved into the dataset and downloaded if `download` is enabled (`true`, `0`) | `false` | :heavy_multiplication_x: |
 | `profile` | `string`  | The location (or name if located in the same folder) of the `.json` file containing a valid profile, more info in section [Profiles](#profiles) (`C:\booruProfile.json`, `booruProfile`) |    | :heavy_multiplication_x: |
+| `exceptionLimit` | `byte`  | The amount of exceptions that can occur inside a thread. (`14`, `"20"`) | `5` | :heavy_multiplication_x: |
 | `username`| `string`  | The username of the Booru account that you wish to authenticate with (`"My Username"`, `my_username`) |   | :heavy_multiplication_x: |
 | `passwordHash`| `string`  | The password used to authenticate yourself at the given source. Note: this can be your password hash, API key or a different key, depending on the Booru of your choosing. More info at [Authentication](#authentication) (`"{password_hash}"`, `{api_key}`). | `{Executing Folder}/Images` | :heavy_multiplication_x: |
 

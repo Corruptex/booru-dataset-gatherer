@@ -40,6 +40,10 @@ namespace BooruDatasetGatherer.Data
         public bool DownloadImages { get; set; } = false;
 
 
+        [JsonPropertyName("exceptionLimit")]
+        public byte ExceptionLimit { get; set; } = 5;
+
+
         [JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
