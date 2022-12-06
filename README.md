@@ -12,7 +12,7 @@
 [![Publish](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml/badge.svg)](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml)
 
 ## Summary
-<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
+<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 written Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
 
 ## Quick Start
 Build the application using `dotnet build BooruDatasetGatherer` inside the cloned repository or use Visual Studio (Windows & Mac only) to compile a Debug or Release version.
@@ -36,16 +36,19 @@ Example: `--source safebooru --filter "1girl, confetti" --nsfw false`
 | `batch`   | `int`     | The size that a batch is allowed to be. The total size is split among threads, the split size will be divided by the batch size in to cycles (`50`, `15`) | `20` | :heavy_multiplication_x: |
 | `threads` | `byte`    | The amount of threads to split the dataset gathering task with (`4`, `16`) | `4` | :heavy_multiplication_x: |
 | `nsfw`    | `bool`    | If enabled, images that contain Not Safe For Work (NSFW) content will be saved into the dataset and downloaded if `download` is enabled (`true`, `0`) | `false` | :heavy_multiplication_x: |
-| `profile` | `string`  | The location (or name if located in the same folder) of the `.json` file containing a valid profile, more info in section [Profiles](#profiles) (`C:\booruProfile.json`, `booruProfile`) |    | :heavy_multiplication_x: |  
+| `profile` | `string`  | The location (or name if located in the same folder) of the `.json` file containing a valid profile, more info in section [Profiles](#profiles) (`C:\booruProfile.json`, `booruProfile`) |    | :heavy_multiplication_x: |
+| `exceptionLimit` | `byte`  | The amount of exceptions that can occur inside a thread. (`14`, `"20"`) | `5` | :heavy_multiplication_x: |
+| `username`| `string`  | The username of the Booru account that you wish to authenticate with (`"My Username"`, `my_username`) |   | :heavy_multiplication_x: |
+| `passwordHash`| `string`  | The password used to authenticate yourself at the given source. Note: this can be your password hash, API key or a different key, depending on the Booru of your choosing. More info at [Authentication](#authentication) (`"{password_hash}"`, `{api_key}`). | `{Executing Folder}/Images` | :heavy_multiplication_x: |
 
 In [Examples](#examples) multiple examples are given for different purposes using the above mentioned arguments.
 
 ### Profiles
-To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument overrules the values inside the profile.
+To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument will be ignored.
 
-If in the `booruProfile` json the `size` argument is set to 20, it'll be overruled by the raw argument that's passed in. In this scenario
+If in the `booruProfile` json the `size` argument is set to 20, it'll overrule the raw argument that's passed in. In this scenario
 `--profile "booruProfile" --size 50`
-the `size` will be 50, even though 20 is defined in the `booruProfile`.
+the `size` will be 20, even though 50 is passed as an argument.
 
 A profile can look like this:
 ```json
@@ -102,9 +105,14 @@ A set of examples to help you get on your way to using this tool.
 ---profile "safeBooruProfile"
 ```
 
+### With authentication
+```powershell
+---source safebooru --username "{username}" --passwordHash "{password_hash}"
+```
+
 ### Customizing all parameters
 ```powershell
---profile safebooru --filter "1boy, confetti, celebrating" --size 1500 --batch 25 --threads 16 --download true --nsfw false --location "C:/Dataset" --files ".jpg, .jpeg"
+--source safebooru --filter "1boy, confetti, celebrating" --size 1500 --batch 25 --threads 16 --download true --nsfw false --location "C:/Dataset" --files ".jpg, .jpeg"
 ```
 
 ## Supported Boorus
@@ -131,6 +139,9 @@ The output of these Boorus are generic and will not differ, it can occur that a 
 ```
 FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION
 ```
+
+## Authentication
+Since BooruSharp supports authentication, this application also supports this feature. By passing along a `--username` and `--passwordHash` you can authenticate yourself to the given Booru source. The different methods of authentication and which Booru supports it, you should consult the BooruSharp `README.md`, under the section [Authentication](https://github.com/Xwilarg/BooruSharp#authentification).
 
 ## Future
 Since this application is made to gather information, a few things are on the road-map to further enhance that core feature. This includes:

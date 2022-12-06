@@ -58,8 +58,11 @@ namespace BooruDatasetGatherer
                         profile = booruProfile;
                 }
             }
-
-            profile.ParseSettings(argMap);
+            else
+            {
+                string argJson = JsonSerializer.Serialize(argMap);
+                profile = JsonSerializer.Deserialize<BooruProfile>(argJson)!;
+            }
 
             if (string.IsNullOrEmpty(profile.Source))
                 return;
@@ -74,7 +77,7 @@ namespace BooruDatasetGatherer
             Console.WriteLine("Running with settings: \n");
             Console.WriteLine(JsonSerializer.Serialize(profile, new JsonSerializerOptions { WriteIndented = true }));
 
-            ABooru booru = factory.GetBooru(profile.Source)!;
+            ABooru booru = factory.GetBooru(profile)!;
             if (!booru.HasMultipleRandomAPI)
             {
                 Console.WriteLine("Selected source does not support getting random posts. Exiting.");
@@ -95,7 +98,7 @@ namespace BooruDatasetGatherer
                 await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION");
 
                 for (int i = 0; i < threads.Length; i++)
-                    threads[i] = GetPostsAsync(factory.GetBooru(profile.Source)!, profile, stream, perThread, profile.BatchSize);
+                    threads[i] = GetPostsAsync(factory.GetBooru(profile)!, profile, stream, perThread, profile.BatchSize);
 
                 await Task.WhenAll(threads);
             }
@@ -108,6 +111,7 @@ namespace BooruDatasetGatherer
         private static async Task GetPostsAsync(ABooru booruInstance, BooruProfile profile, StreamWriter stream, int total, int batch)
         {
             int processed = 0;
+            int exceptions = 0;
 
             while (processed < total)
             {
@@ -120,9 +124,17 @@ namespace BooruDatasetGatherer
                     else
                         results = await booruInstance.GetRandomPostsAsync(batch, profile.Filter);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Console.WriteLine("Encountered an exception, continuing gathering a new batch.");
+
+                    exceptions++;
+                    if (exceptions > profile.ExceptionLimit)
+                    {
+                        Console.WriteLine($"Passed the exception limit of {profile.ExceptionLimit}, terminating thread.");
+                        break;
+                    }
+
                     processed -= batch;
                 }
                 finally
