@@ -124,7 +124,7 @@ namespace BooruDatasetGatherer
                     else
                         results = await booruInstance.GetRandomPostsAsync(batch, profile.Filter);
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     Console.WriteLine("Encountered an exception, continuing gathering a new batch.");
 
@@ -136,9 +136,6 @@ namespace BooruDatasetGatherer
                     }
 
                     processed -= batch;
-                }
-                finally
-                {
                     results = Array.Empty<SearchResult>();
                 }
 
