@@ -41,6 +41,10 @@ namespace BooruDatasetGatherer.Data
         public bool DownloadImages { get; set; } = false;
 
 
+        [JsonPropertyName("exceptionLimit")]
+        public byte ExceptionLimit { get; set; } = 5;
+
+
         [JsonPropertyName("username")]
         public string Username { get; set; } = string.Empty;
 
@@ -101,6 +105,10 @@ namespace BooruDatasetGatherer.Data
                     case "passwordhash":
                     case "password":
                         Password = settings[key];
+                        break;
+                    case "exceptionlimit":
+                        if (byte.TryParse(settings[key], out byte limit))
+                            ExceptionLimit = limit;
                         break;
                 }
             }
