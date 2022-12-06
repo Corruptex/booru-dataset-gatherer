@@ -58,8 +58,11 @@ namespace BooruDatasetGatherer
                         profile = booruProfile;
                 }
             }
-
-            profile.ParseSettings(argMap);
+            else
+            {
+                string argJson = JsonSerializer.Serialize(argMap);
+                profile = JsonSerializer.Deserialize<BooruProfile>(argJson)!;
+            }
 
             if (string.IsNullOrEmpty(profile.Source))
                 return;

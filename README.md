@@ -12,7 +12,7 @@
 [![Publish](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml/badge.svg)](https://github.com/Corruptex/booru-dataset-getherer/actions/workflows/publish.yml)
 
 ## Summary
-<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
+<b>BooruDatasetGatherer</b> is an in .NET Core 3.1 written Console application that aims to give the user an easy way to gather a large dataset from Booru based API's. With support for profiles, downloading images and gathering information inside a CSV dataset, it provides you with a set of tools to get you started with tagged Booru datasets for Machine Learning. The uses for this application could be for Object Recognition, Latent Diffusion, local Booru web-servers or other ends that require tagged images.
 
 ## Quick Start
 Build the application using `dotnet build BooruDatasetGatherer` inside the cloned repository or use Visual Studio (Windows & Mac only) to compile a Debug or Release version.
@@ -44,11 +44,11 @@ Example: `--source safebooru --filter "1girl, confetti" --nsfw false`
 In [Examples](#examples) multiple examples are given for different purposes using the above mentioned arguments.
 
 ### Profiles
-To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument overrules the values inside the profile.
+To make it easier to repeat tasks, arguments can be contained inside a `.json` file. This is called a profile, with which you can easily load a certain set of arguments into the application without the need to pass any arguments yourself. Any argument that's passed with a `--profile` argument will be ignored.
 
-If in the `booruProfile` json the `size` argument is set to 20, it'll be overruled by the raw argument that's passed in. In this scenario
+If in the `booruProfile` json the `size` argument is set to 20, it'll overrule the raw argument that's passed in. In this scenario
 `--profile "booruProfile" --size 50`
-the `size` will be 50, even though 20 is defined in the `booruProfile`.
+the `size` will be 20, even though 50 is passed as an argument.
 
 A profile can look like this:
 ```json
