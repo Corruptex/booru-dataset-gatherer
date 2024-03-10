@@ -92,7 +92,7 @@ namespace BooruDatasetGatherer
 
             Stopwatch stopWatch = Stopwatch.StartNew();
 
-            string fileLocation = Path.Join(profile.SaveLocation, $"results-{profile.Source}-{DateTime.Now.ToShortDateString()}-{DateTime.Now.ToShortTimeString().Replace(":", "-")}.csv");
+            string fileLocation = Path.Join(profile.SaveLocation, $"results-{profile.Source}-{DateTime.Now.ToString("yyyyMMdd")}-{DateTime.Now.ToShortTimeString().Replace(":", "-")}.csv");
             using (StreamWriter stream = new StreamWriter(File.Create(fileLocation)))
             {
                 await stream.WriteLineAsync("FILEURL, PREVIEWURL, POSTURL, SAMPLEURI, RATING, TAGS, ID, HEIGHT, WIDTH, PREVIEWHEIGHT, PREVIEWWIDTH, CREATION, SOURCE, SCORE, MD5, LOCATION");
